@@ -97,7 +97,7 @@ def main():
 
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
 
-    model_args, data_args, training_args = parser.parse_json_file(json_file="train_ag_args.json")
+    model_args, data_args, training_args = parser.parse_json_file(json_file="train_args.json")
 
     assert model_args.model_type in list(MODEL_TYPE_TO_TOKENIZER.keys()), "model type should be 't5' or 'bart'"
 
