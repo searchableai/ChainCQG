@@ -32,7 +32,7 @@ Outputs:
 - featurized training data it pt format for the task specified in the data_args.json input file
 
 3. Training
-run `python run_qg.py`
+run `python train.py`
 - the train_ag_args.json file given in this directory contains all of the relevant hyperparams for the ans_extraction task. Similarly, the question generation model may be trained by changing the training dataset target in the training_args file
 Outputs:
 - Model checkpoints in the ./outputs dir
