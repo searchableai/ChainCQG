@@ -108,7 +108,7 @@ class DataProcessor:
         dataset = list(map(self._add_special_tokens, dataset))
 
         dataset = list(map(self._convert_to_features, list(dataset_to_batch(dataset))))
-        dataset = _unnest(dataset)
+        dataset = self._unnest(dataset)
         
         return dataset
   
