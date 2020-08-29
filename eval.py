@@ -24,34 +24,7 @@ MODEL_TYPE_TO_TOKENIZER = {
     "bart": BartTokenizer,
 }
 
-device = 'cuda' if torch.cuda.is_available else 'cpu'
-
 logger = logging.getLogger(__name__)
-
-@dataclass
-class ModelArguments:
-    """
-    Arguments pertaining to which model/config/tokenizer we are going to fine-tune from.
-    """
-
-    model_name_or_path: str = field(
-        metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
-    )
-    model_type: str = field(metadata={"help": "One of 't5', 'bart'"})
-    tokenizer_name_or_path: Optional[str] = field(
-        default=None, metadata={"help": "Pretrained tokenizer name or path if not the same as model_name"}
-    )
-    cache_dir: Optional[str] = field(
-        default=None, metadata={"help": "Where do you want to store the pretrained models downloaded from s3"}
-    )
-    label_smoothing: Optional[float] = field(
-        default=0,
-        metadata={"help": "label smoothing rate, set to > 0 if you want to enable lable smoothing"}
-    )
-    freeze_embeds: bool = field(
-        default=False,
-        metadata={"help": "Freeze token embeddings and positional embeddings for bart, just token embeddings for t5."}
-    )
 
 @dataclass
 class EvalArguments:
@@ -78,8 +51,8 @@ class EvalArguments:
         metadata={"help": "path to save the generated questions."}
     )
 
-def get_predictions(model, tokenizer, data_loader, num_beams=4, max_length=32, length_penalty=1):
-    model.to(device)
+def get_predictions(model, tokenizer, data_loader, device="cpu", num_beams=4, max_length=32, length_penalty=1):
+    #model.to(device)
     
     predictions = []
     model.eval()
@@ -99,14 +72,16 @@ def get_predictions(model, tokenizer, data_loader, num_beams=4, max_length=32, l
     return predictions
 
 def main():
-    parser = HfArgumentParser((EvalArguments,))
-    args = parser.parse_json_file(json_file="eval_ag_args.json")[0]
+    parser = HfArgumentParser((EvalArguments,TrainingArguments))
+    args, training_args = parser.parse_json_file(json_file="eval_ag_args.json")
 
     tokenizer_cls = MODEL_TYPE_TO_TOKENIZER[args.model_type]
     tokenizer = tokenizer_cls.from_pretrained(
         args.tokenizer_name_or_path if args.tokenizer_name_or_path else args.model_name_or_path,
     )
     model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name_or_path)
+    device = training_args.device
+    model.to(device)
 
     eval_dataset = torch.load(args.eval_file_path)
     collator = T2TDataCollator(
@@ -120,6 +95,7 @@ def main():
         model=model,
         tokenizer=tokenizer,
         data_loader=loader,
+        device=device,
         num_beams=args.num_beams,
         max_length=args.max_decoding_length
     )
