@@ -73,7 +73,7 @@ def get_predictions(model, tokenizer, data_loader, device="cpu", num_beams=4, ma
 
 def main():
     parser = HfArgumentParser((EvalArguments,TrainingArguments))
-    args, training_args = parser.parse_json_file(json_file="eval_ag_args.json")
+    args, training_args = parser.parse_json_file(json_file="eval_args.json")
 
     tokenizer_cls = MODEL_TYPE_TO_TOKENIZER[args.model_type]
     tokenizer = tokenizer_cls.from_pretrained(
