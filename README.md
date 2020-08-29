@@ -4,8 +4,6 @@
 ## Project Details
 In answer-aware question generation, a model is given a passage and a set of candidate answers and tasked with automatically generating questions for each answer. Models like UniLM and ProphetNet provide some benchmarks for these tasks, but we will specifically focus on pre-trained models like T5, GPT-2 and BART.
 
-### answer aware question generation
-
 This package provides scripts that simplify data pipelines, model training and eval with SQuAD-like training data.
 
 ## Tasks
