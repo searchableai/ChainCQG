@@ -141,8 +141,6 @@ def main():
         cache_dir=model_args.cache_dir,
     )
 
-    model.resize_token_embeddings(len(tokenizer))
-
     if model_args.freeze_embeds:
         logger.info("freezing embeddings of the model")
         freeze_embeds(model)
