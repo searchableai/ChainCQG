@@ -2,7 +2,7 @@
     "output_dir": "/home/ubuntu/dev/qa_gen/outputs",
     "task": "ans_ext",
     "model_type": "t5",
-    "train_cachepath": "train_task_data.json",
+    "train_cache_path": "train_task_data.json",
     "eval_path": "dev_task_data.json",
     "qg_format": "highlight_qg_format",
     "max_source_length": 512,
