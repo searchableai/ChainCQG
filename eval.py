@@ -52,8 +52,6 @@ class EvalArguments:
     )
 
 def get_predictions(model, tokenizer, data_loader, device="cpu", num_beams=4, max_length=32, length_penalty=1):
-    #model.to(device)
-    
     predictions = []
     model.eval()
     with torch.no_grad():

@@ -156,8 +156,12 @@ class SquadFeaturizer:
             f.write(qg_inputs)
         with jsonlines.open(prefix+'_ans_ext_inputs.jsonl', 'w') as f:
             f.write(ans_ext_inputs)
-        with jsonlines.open(prefix+'_qg_references.jsonl', 'w') as f:
-            f.write(references)
+        with open(prefix+'_ans_ext_references.txt', 'w') as f:
+            for ref in ans_ext_inputs:
+                f.write(ref['target_text']+'\n')
+        with open(prefix+'_qg_references.txt', 'w') as f:
+            for ref in references:
+                f.write(ref+'\n')
 
 if __name__ == "__main__":
     featurizer = SquadFeaturizer()
