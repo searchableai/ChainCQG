@@ -19,20 +19,26 @@ QG_FORMATS = [
 
 
 class SquadFeaturizer:
-    def __init__(self, qg_format="highlight", data_tag="squadv1"):
-        """ Instantiate a SquadFeaturizer instance """
+    def __init__(self, qg_format="highlight", data_format="squadv1", ):
         self.qg_format = qg_format
-        self._train_path, self._dev_path = self._split_generator()
+        self._train_path, self._dev_path = self._split_generator(data_format)
+        self._data_format = data_format
 
     def __call__(self):
         return _
 
-    def _split_generator(self):
-        """ Get train/dev paths"""
-        split_labels = {
-            "train": os.path.join("support", "train-v1.1.json"),
-            "dev": os.path.join("support", "dev-v1.1.json")
-        }
+    def _split_generator(self, data_format):
+        self._data_format = data_format
+        if data_format == "squadv1":
+            split_labels = {
+                "train": os.path.join("support", "train-v1.1.json"),
+                "dev": os.path.join("support", "dev-v1.1.json")
+            }
+        elif data_format == "squadv2":
+            split_labels = {
+                "train": os.path.join("support", "train-v2.0.json"),
+                "dev": os.path.join("support", "dev-v2.0.json")
+            }
         return [
             split_labels['train'],
             split_labels['dev']
@@ -53,7 +59,6 @@ class SquadFeaturizer:
             raise ValueError()
     
     def process_qg_text(self, context, question, answer):
-        """ Generate inputs for qg task """
         answer_text = answer['text'].strip()
         
         if self.qg_format == "prepend":
@@ -69,13 +74,12 @@ class SquadFeaturizer:
         return {"source_text": q_gen_input, "target_text": q_gen_target, "task": "qg"}
     
     def process_ans_ext(self, paragraph):
-        """ Generate inputs for ans_ext task """
         context = paragraph['context'].strip()
     
-        # Split into sentences
+        # split into sentences
         sents = nltk.sent_tokenize(context)
 
-        # Get positions of the sentences
+        # get positions of the sentences
         positions = []
         for i, sent in enumerate(sents):
             if i == 0:
@@ -85,10 +89,13 @@ class SquadFeaturizer:
             prev_end = end
             positions.append({'start': start, 'end': end})
         
-        # Get answers
-        answers = [qa['answers'][0] for qa in paragraph['qas']]
+        # get answers
+        if self._data_format == 'squadv1':
+            answers = [qa['answers'][0] for qa in paragraph['qas']]
+        elif self._data_format == 'squadv2':
+            answers = [qa['answers'][0] if qa['answers'] else {'text':'', 'answer_start':0} for qa in paragraph['qas']]
 
-        # Get list of answers for each sentence
+        # get list of answers for each sentence
         sent_answers = []
         for pos, sent in zip(positions, sents):
             target_answers = []
@@ -97,7 +104,7 @@ class SquadFeaturizer:
                     target_answers.append(ans['text'].strip())
             sent_answers.append(target_answers)
 
-        # Build inputs and targets
+        # build inputs and targets
         examples = []
         for i, ans in enumerate(sent_answers):
             context = "extract answers:"
@@ -146,15 +153,19 @@ class SquadFeaturizer:
                         answers = [answer["text"].strip() for answer in qa["answers"]]
                         for task in tasks:
                             if task == 'qg':
-                                example = self.process_qg_text(context, question, qa["answers"][0])
+                                if self._data_format == 'v2':
+                                    ans = qa['answers'][0] if qa['answers'] else {'text':'', 'answer_start':0}
+                                    example = self.process_qg_text(context, question, ans)
+                                elif self._data_format == 'v1':
+                                    example = self.process_qg_text(context, question, qa["answers"][0])
                                 task_data[task].append(example)
                                 qg_inputs.append(example)
         print('Processed {} input examples - {} ans_ext - {} qg'.format(len(qg_inputs), len(task_data['ans_ext']), len(task_data['qg'])))
         with open(prefix+'_task_data.json', 'w') as f:
             json.dump(task_data, f)
-        with jsonlines.open(prefix+'_qg_inputs.jsonl', 'w') as f:
+        with jsonlines.open(prefix+'_qg_inputs.txt', 'w') as f:
             f.write(qg_inputs)
-        with jsonlines.open(prefix+'_ans_ext_inputs.jsonl', 'w') as f:
+        with jsonlines.open(prefix+'_ans_ext_inputs.txt', 'w') as f:
             f.write(ans_ext_inputs)
         with open(prefix+'_ans_ext_references.txt', 'w') as f:
             for ref in ans_ext_inputs:
@@ -165,6 +176,6 @@ class SquadFeaturizer:
 
 if __name__ == "__main__":
     featurizer = SquadFeaturizer()
-    train_path, dev_path = featurizer._split_generator()
+    train_path, dev_path = featurizer._split_generator(data_format='squadv1')
     featurizer._generate_examples(train_path, 'train')
     featurizer._generate_examples(dev_path, 'dev')
