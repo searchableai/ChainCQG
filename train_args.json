@@ -1,10 +1,11 @@
 {
     "no_cuda": false,
     "model_name_or_path": "t5-base",
+    "tokenizer_name_or_path": "t5_qg_tokenizer",
     "model_type": "t5",
     "output_dir": "outputs",
-    "train_file_path": "train_data_ans_ext_highlight_qg_format_t5.pt",
-    "eval_file_path": "eval_data_ans_ext_highlight_qg_format_t5.pt",
+    "train_file_path": "train_data_qg_highlight_qg_format_t5.pt",
+    "eval_file_path": "eval_data_qg_highlight_qg_format_t5.pt",
     "per_device_train_batch_size": 8,
     "per_device_eval_batch_size": 2,
     "gradient_accumulation_steps": 8,
