@@ -134,12 +134,12 @@ def main():
     tokenizer_cls = MODEL_TYPE_TO_TOKENIZER[model_args.model_type]
     tokenizer = tokenizer_cls.from_pretrained(
         model_args.tokenizer_name_or_path if model_args.tokenizer_name_or_path else model_args.model_name_or_path,
-        cache_dir=model_args.cache_dir,
     )
     model = AutoModelForSeq2SeqLM.from_pretrained(
         model_args.model_name_or_path,
-        cache_dir=model_args.cache_dir,
     )
+
+    #model.resize_token_embeddings(len(tokenizer))
 
     if model_args.freeze_embeds:
         logger.info("freezing embeddings of the model")

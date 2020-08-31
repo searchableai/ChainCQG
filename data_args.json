@@ -2,7 +2,6 @@
     "output_dir": "/home/ubuntu/dev/qa_gen/outputs",
     "task": "ans_ext",
     "model_type": "t5",
-    "eval_path": "dev_task_data.json",
     "qg_format": "highlight_qg_format",
     "max_source_length": 512,
     "max_target_length": 32
