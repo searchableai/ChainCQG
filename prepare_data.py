@@ -120,8 +120,8 @@ class DataProcessor:
         """
         Append an eos token to each source and target string
         """
-        example['source_text'] = example['source_text'] + tokenizer.eos_token
-        example['target_text'] = example['target_text'] + tokenizer.eos_token
+        example['source_text'] = example['source_text'] + self.tokenizer.eos_token
+        example['target_text'] = example['target_text'] + self.tokenizer.eos_token
         return example
   
     def _add_eos_examples(self, example):
