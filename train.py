@@ -139,7 +139,8 @@ def main():
         model_args.model_name_or_path,
     )
 
-    #model.resize_token_embeddings(len(tokenizer))
+    # Extend the emb dim for special toks
+    model.resize_token_embeddings(len(tokenizer))
 
     if model_args.freeze_embeds:
         logger.info("freezing embeddings of the model")
