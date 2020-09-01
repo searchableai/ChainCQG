@@ -106,14 +106,11 @@ class DataProcessor:
     def process(self, dataset):
         if self.model_type == "t5":
             dataset = list(map(self._add_eos_examples, dataset))
-        elif self.model_type == 'gpt2':
-            dataset = list(map(self._add_eos_examples_gpt2, dataset))
         
         dataset = list(map(self._add_special_tokens, dataset))
 
         dataset = list(map(self._convert_to_features, list(dataset_to_batch(dataset))))
         dataset = self._unnest(dataset)
-        
         return dataset
 
     def _add_eos_examples_gpt2(self, example):
@@ -123,7 +120,7 @@ class DataProcessor:
         example['source_text'] = example['source_text'] + self.tokenizer.eos_token
         example['target_text'] = example['target_text'] + self.tokenizer.eos_token
         return example
-  
+
     def _add_eos_examples(self, example):
         """
         Append an eos token to each source and target string
