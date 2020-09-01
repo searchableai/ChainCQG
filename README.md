@@ -31,12 +31,12 @@ Outputs:
 
 3. Training
 run `python train.py`
-- the train_ag_args.json file given in this directory contains all of the relevant hyperparams for the ans_extraction task. Similarly, the question generation model may be trained by changing the training dataset target in the training_args file
+- the train_args.json file given in this directory contains all of the relevant hyperparams for the ans_extraction task. Similarly, the question generation model may be trained by changing the training dataset target in the training_args file
 Outputs:
 - Model checkpoints in the ./outputs dir
 
 4. Eval
 run `python eval.py`
-- the eval_ag_args.json file contains all of the relevant eval parameters for the ans_ext task. Similarly, the question generation (qg) tasks may be replace here.
+- the eval_args.json file contains all of the relevant eval parameters for the ans_ext task. Similarly, the question generation (qg) tasks may be replace here.
 Outputs:
 - results: question generated for each dev example. May be compared with the dev_qg_references.txt from step 1.
