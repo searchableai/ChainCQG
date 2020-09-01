@@ -18,7 +18,7 @@ class DataTrainingArguments:
     Arguments pertaining to what data we are going to input our model for training and eval.
     """
     task: str = field(
-        metadata={"help": "Which task 'qa', 'qg', 'e2e_qg', 'ans_ext', 'multi'. 'multi' means 'qa', 'qg', 'ans_ext' tasks"}, 
+        metadata={"help": "Which task 'ans_ext', 'qg'"},
     )
     model_type: str = field(metadata={"help": "One of 't5', 'bart'"})
     train_cache_path: Optional[str] = field(
