@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 
 import torch
 import nlp
-from transformers import T5Tokenizer, BartTokenizer, HfArgumentParser
+from transformers import T5Tokenizer, BartTokenizer, GPT2Tokenizer, HfArgumentParser
 
 
 logger = logging.getLogger(__name__)
@@ -170,8 +170,10 @@ if __name__ == "__main__":
     # Supports t5 and bart tokenizers
     if data_args.model_type == 't5':
         tokenizer = T5Tokenizer.from_pretrained("t5-base")
-    else:
-        tokenizer = T5Tokenizer.from_pretrained("bart-base")
+    elif data_args.model_type == 'bart':
+        tokenizer = BartTokenizer.from_pretrained("bart-base")
+    elif data_args.model_type == 'gpt2':
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
     
     # Add special tokens for highlighting input format
     tokenizer.add_tokens(['<sep>', '<hl>'])
