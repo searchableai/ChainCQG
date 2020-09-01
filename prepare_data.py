@@ -79,6 +79,8 @@ class DataProcessor:
             self.sep_token = "<sep>"
         elif model_type == "bart":
             self.sep_token = "<sep>"
+        elif model_type == "gpt2":
+            self.sep_token = "<sep>"
         else:
             self.sep_token = "[SEP]"
 
@@ -104,6 +106,8 @@ class DataProcessor:
     def process(self, dataset):
         if self.model_type == "t5":
             dataset = list(map(self._add_eos_examples, dataset))
+        elif self.model_type == 'gpt2':
+            dataset = list(map(self._add_eos_examples_gpt2, dataset))
         
         dataset = list(map(self._add_special_tokens, dataset))
 
@@ -111,6 +115,14 @@ class DataProcessor:
         dataset = self._unnest(dataset)
         
         return dataset
+
+    def _add_eos_examples_gpt2(self, example):
+        """
+        Append an eos token to each source and target string
+        """
+        example['source_text'] = example['source_text'] + tokenizer.eos_token
+        example['target_text'] = example['target_text'] + tokenizer.eos_token
+        return example
   
     def _add_eos_examples(self, example):
         """
@@ -173,7 +185,8 @@ if __name__ == "__main__":
     elif data_args.model_type == 'bart':
         tokenizer = BartTokenizer.from_pretrained("bart-base")
     elif data_args.model_type == 'gpt2':
-        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        tokenizer.pad_token = tokenizer.eos_token
     
     # Add special tokens for highlighting input format
     tokenizer.add_tokens(['<sep>', '<hl>'])

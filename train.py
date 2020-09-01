@@ -14,6 +14,7 @@ from transformers import (
     AutoTokenizer,
     T5Tokenizer,
     BartTokenizer,
+    GPT2Tokenizer,
     HfArgumentParser,
     DataCollator,
     TrainingArguments,
@@ -27,6 +28,7 @@ from utils import freeze_embeds, assert_not_all_frozen
 MODEL_TYPE_TO_TOKENIZER = {
     "t5": T5Tokenizer,
     "bart": BartTokenizer,
+    "gpt2": GPT2Tokenizer,
 }
 
 logger = logging.getLogger(__name__)
