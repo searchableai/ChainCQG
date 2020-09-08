@@ -153,10 +153,10 @@ class SquadFeaturizer:
                         answers = [answer["text"].strip() for answer in qa["answers"]]
                         for task in tasks:
                             if task == 'qg':
-                                if self._data_format == 'v2':
+                                if self._data_format == 'squadv2':
                                     ans = qa['answers'][0] if qa['answers'] else {'text':'', 'answer_start':0}
                                     example = self.process_qg_text(context, question, ans)
-                                elif self._data_format == 'v1':
+                                elif self._data_format == 'squadv1':
                                     example = self.process_qg_text(context, question, qa["answers"][0])
                                 task_data[task].append(example)
                                 qg_inputs.append(example)
