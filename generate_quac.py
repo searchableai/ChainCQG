@@ -3,7 +3,7 @@ import json
 
 class QuacFeaturizer:
     def __init__(self):
-        self._train_path, self._dev_path = self._split_generator()
+        pass
 
     def __call__(self):
         return _
@@ -13,6 +13,16 @@ class QuacFeaturizer:
             "train": os.path.join("support", "quac-train-v0.2.json"),
             "dev": os.path.join("support", "quac-dev-v0.2.json")
         }
+        source = {
+            "train": "https://s3.amazonaws.com/my89public/quac/train_v0.2.json",
+            "dev": "https://s3.amazonaws.com/my89public/quac/val_v0.2.json"
+        }
+
+        for k,v in split_labels.items():
+            if not os.path.isfile(v):
+                print('Please download the quac {} dataset to ./support: {}'.format(k, source[k])) 
+                split_labels[k] = None
+
         return [
             split_labels['train'],
             split_labels['dev']
@@ -21,6 +31,9 @@ class QuacFeaturizer:
     def _generate_examples(self, datapath, split):
         # Yields (key, example) tuples from the dataset
         print('Processing file: ', datapath)
+        if not datapath:
+            raise Exception("Please specify datapath for split dataset")
+
         with open(datapath, encoding="utf-8") as f:
             data = json.load(f)
         for article in data["data"]:
