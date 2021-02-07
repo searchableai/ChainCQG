@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python eval.py --config_file args_json_folder/eval_args_t5_base.json
