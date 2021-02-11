@@ -16,12 +16,23 @@ ChainCQG is a two-stage architecture that learns question-answer representations
 
 
 if you find our work useful, please cite:
-```
+<!-- ```
 @inproceedings{gu-2021-chaincqg,
   title={ChainCQG: Flow-Aware Conversational Question Generation},
   author={Jing Gu, Mostafa Mirshekari, Zhou Yu and Aaron Sisto},
   booktitle={European Chapter of the ACL },
   year={2021},
   url={place holder}
+}
+```
+-->
+```
+@misc{gu2021chaincqg,
+      title={ChainCQG: Flow-Aware Conversational Question Generation}, 
+      author={Jing Gu and Mostafa Mirshekari and Zhou Yu and Aaron Sisto},
+      year={2021},
+      eprint={2102.02864},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
 }
 ```
